@@ -29,16 +29,40 @@ features_train, features_test, labels_train, labels_test = preprocess()
 from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score
 
-clf = SVC(C=1.0, kernel='linear');
-tt = time()
-clf.fit(features_train, labels_train)
-print "Training time:", round(time()-tt, 3), "s"
+############################
+### Reduced training set
 
-tp = time()
-pred = clf.predict(features_test)
-print "Prediction time:", round(time()-tp, 3), "s"
+# features_train = features_train[:len(features_train)/100] 
+# labels_train = labels_train[:len(labels_train)/100] 
+############################
 
-ts = time()
-accuracy = clf.score(features_test, labels_test)
-print accuracy
-print "Scoring time:", round(time()-tp, 3), "s"
+# clf = SVC(C=1.0, kernel='linear');
+
+############################
+### C parameter optimization for 'rbf' kernel
+#for clsz in [10, 100, 1000, 10000]:
+
+############################
+
+for clsz in [10000]:
+    print"++ Class Size:  ", clsz, "  ++"
+    clf = SVC(kernel='rbf', C=clsz)
+    tt = time()
+    clf.fit(features_train, labels_train)
+    print "Training time:", round(time()-tt, 3), "s"
+    
+    tp = time()
+    pred = clf.predict(features_test)
+    print "Prediction time:", round(time()-tp, 3), "s"
+    
+    ts = time()
+    accuracy = clf.score(features_test, labels_test)
+    print accuracy
+    print "Scoring time:", round(time()-tp, 3), "s"
+
+print(pred[10])
+print(pred[26])
+print(pred[50])
+
+###### How many emails are predicted as 'Chris'? ( pred[i] == 1)
+sum(pred)
